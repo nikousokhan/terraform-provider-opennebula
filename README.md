@@ -92,7 +92,7 @@ In the `groups.tfvars` file, you can define the group names and their correspond
 ```hcl
 groups = {
   "onedba" = {
-    group_dn = "cn=onedba,cn=groups,cn=accounts,dc=snapp,dc=infra"
+    group_dn = "cn=onedba,cn=groups,cn=accounts,dc=company,dc=ecs"
   }
 ...  
 }
@@ -226,7 +226,7 @@ In the `users.tfvars` file, you define the users as follows:
 ```hcl
 users = [
   {
-    name          = "mohammadali.nikousokhan"
+    name          = "example.user"
     primary_group = "oneadmin"
     groups        = ["oneadmin"]
   }
@@ -286,7 +286,7 @@ In the `networks.tfvars` file, you define the networks as follows:
 ```hcl
 networks = {
   vlan770 = {
-    name            = "Afra-1G"
+    name            = "ecs-1G"
     bridge          = "br4"
     type            = "bridge"
     gateway         = "172.16.77.134"
@@ -459,7 +459,7 @@ In the `hosts.tfvars` file, you define the compute as follows:
 
 ```hcl
 hosts = {
-  "Nebula-master-01.app.afra.snapp.infra" = {
+  "Nebula-master-01.ecs.infra" = {
     cluster_id = "0"
     labels     = "Nebula M,D-S-7T 80%"
     cpu        = 10800        # overcommit 88 Threads
@@ -502,9 +502,9 @@ In the `templates.tfvars` file, you define the template as follows:
 templates = {
   "Afra-Ubuntu24.04" = {
     image_id           = "Ubuntu 24.04"
-    network_ids        = ["Afra-10G", "Afra-DB"]
+    network_ids        = ["ecs-10G", "ecs-DB"]
     sched_requirements = "CLUSTER_ID=\"0\""
-    start_script       = "aWYgW1sgISAkKGNhdCAvZXRjL3Jlc29sdi5jb25mIHwgZ3JlcCAtdyAiMTcyLjIwLjEuMjIiKSBdXSA7IHRoZW4gCmVjaG8gJ25hbWVzZXJ2ZXIgMTcyLjIwLjEuMjInID4gL2V0Yy9yZXNvbHYuY29uZiAgOyBmaQpta2RpciAvZXRjL3NzaC9hdXRoX3ByaW5jaXBhbHMgL3Jvb3QvLnNzaAphcHQgdXBkYXRlCmFwdCBpbnN0YWxsIC15IGpxCnRlZSAvdG1wL3BheWxvYWQuanNvbiA8PEVPRgp7CiAgInJvbGVfaWQiOiAiJFJPTEVJRCIsCiAgInNlY3JldF9pZCI6ICIkU0VDUkVUSUQiCn0KRU9GCgpWQVVMVF9BRERSRVNTPSJodHRwczovL3ZhdWx0LnNuYXBwLnRlY2giCktFWV9QQVRIPSIvcm9vdC8uc3NoL2F1dGhvcml6ZWRfa2V5czIiCnRvdWNoICRLRVlfUEFUSApjaG1vZCA2MDAgJEtFWV9QQVRICkNIQU5HRUQ9ZmFsc2UKQVBQX1RPS0VOPSQoIGN1cmwgLXNTIC0tcmVxdWVzdCBQT1NUIC0tZGF0YSBAL3RtcC9wYXlsb2FkLmpzb24gJFZBVUxUX0FERFJFU1MvdjEvYXV0aC9hcHByb2xlL2xvZ2luIHwganEgLXIgIi5hdXRoLmNsaWVudF90b2tlbiIpClNTSF9LRVlTPSIiCmZvciBpIGluIENJIGJhc3Rpb24KZG8gS0VZPSQoY3VybCAtc1MgLS1oZWFkZXIgIlgtVmF1bHQtVG9rZW46ICRBUFBfVE9LRU4iICAkVkFVTFRfQUREUkVTUy92MS9rdi9kYXRhL1N5c09wcy9rZXlzIHwganEgLXIgLmRhdGEuZGF0YS4ke2l9KQpTU0hfS0VZUys9IiMjIyR7aX1cbiR7S0VZfVxuIgppZiBbWyAhICQoY2F0ICRLRVlfUEFUSCB8Z3JlcCAtdyAiJEtFWSIpIF1dCnRoZW4gQ0hBTkdFRD10cnVlCmZpCmRvbmUKaWYgW1sgJENIQU5HRUQgLWVxICJ0cnVlIiBdXSAKdGhlbiAKZWNobyAtZSAiJFNTSF9LRVlTIiA+ICRLRVlfUEFUSApmaQpybSAtcmYgL3RtcC9wYXlsb2FkLmpzb24KCnByaW50ZiAncm9vdCcgPiAvZXRjL3NzaC9hdXRoX3ByaW5jaXBhbHMvcm9vdApwcmludGYgJ3Jvb3Qsc25hcHAnID4gL2V0Yy9zc2gvYXV0aF9wcmluY2lwYWxzL3NuYXBwCnVzZXJtb2QgLXMgL2Jpbi9iYXNoICRVU0VSTkFNRQpzeXN0ZW1jdGwgcmVzdGFydCBzc2hkCmhvc3RuYW1lY3RsIHNldC1ob3N0bmFtZSAkVk1OQU1FCmV4cG9ydCBWTVNOQU1FPSR7Vk1OQU1FJSUuKn0Kc2VkICAtaSAnLzEyNy4wLjEuMS9kJyAvZXRjL2hvc3RzCnNlZCAtaWUgIi8xMjcuMC4wLjEgbG9jYWxob3N0L2EgMTI3LjAuMS4xICRWTU5BTUUgJFZNU05BTUUiIC9ldGMvaG9zdHMKCmNhdCA+IC9ldGMvcHJvZmlsZS5kL3NuYXBwX2NtZC5zaCA8PCBFT0YKIyEvYmluL3NoCmlmIFsgIlxgaWQgLXVcYCIgLWVxIDAgXTsgdGhlbgogICAgICAgIGV4cG9ydCBQUk9NUFRfQ09NTUFORD0nZXhwb3J0IFBTMT0iW1x1QFxIIFxXXSMgIicKICAgIGVsc2UKICAgICAgICBleHBvcnQgUFJPTVBUX0NPTU1BTkQ9J2V4cG9ydCBQUzE9IiltXFxHIFxXXCIiCiAgICBmaQpFT0YKY2htb2QgK3ggL2V0Yy9wcm9maWxlLmQvc25hcHBfY21kLnNo"
+    start_script       = "base_code64"
   }
 }
 
@@ -544,11 +544,11 @@ Important Default Values:
     NETWORK         = "YES"
     NETWORK_CONTEXT = "YES"
     VMNAME          = "$NAME"
-    PASSWORD_BASE64 = "U25AcHBTZWNQYXNzMjAyMA=="
-    USERNAME        = "snapp"
-    TIMEZONE        = "Asia/Tehran"
-    ROLEID          = "5c754d2c-870d-4a0a-62db-44555197264d"
-    SECRETID        = "e486456d-a39b-d995-80e8-132ec4fdd06b"
+    PASSWORD_BASE64 = "PASSWORD"
+    USERNAME        = "ecs"
+    TIMEZONE        = "example"
+    ROLEID          = "roleid"
+    SECRETID        = "secretsis"
     START_SCRIPT_base64    = each.value.start_script
   }
   graphics {
@@ -600,7 +600,7 @@ In the `vms.tfvars` file, you define the values as follows:
 
 ```hcl
 vms = {
-  "snapp-test-27.private.app.afra.snapp.infra" = {
+  "example-01.private.ecs.infra" = {
     template  = "Afra-Ubuntu24.04"
     memory    = 3  # GB    
     cpu       = 2
@@ -613,12 +613,12 @@ vms = {
       format   = "qcow2"
     }
     networks = []
-    sched_requirements = "Nebula-master-01.app.afra.snapp.infra"
+    sched_requirements = "Nebula-master-01.ecs.infra"
     labels     = "DevOps, LV.1"    
     group              = "oneadmin"
     permissions        = "640"
   },
-  "snapp-test-24.private.app.afra.snapp.infra" = {
+  "example-02.private.app.ecs.infra" = {
     template  = "Afra-Ubuntu24.04"
     memory    = 5   # GB    
     cpu       = 2
@@ -626,9 +626,9 @@ vms = {
     disk_size = 27   # GB
     additional_disk  = null
     networks = [
-      { network = "Afra-10G", ip = "172.20.2.203" }
+      { network = "ecs-10G", ip = "172.20.2.203" }
     ]
-    sched_requirements = "Nebula-worker-01.app.afra.snapp.infra"
+    sched_requirements = "Nebula-worker-02.ecs.infra"
     labels     = "DBA, Critical-DB"
     group              = "oneadmin"
     permissions        = "640"    
@@ -649,7 +649,7 @@ start_script = ""
 ```
 The value of script_base_64 to be used for database machines is provided below.
 ```hcl
-aWYgWyAhIC1mIC9ldGMvcmVzb2x2LmNvbmYgXTsgdGhlbgogICAgZWNobyAnbmFtZXNlcnZlciAxNzIuMjAuMS4yMicgPiAvZXRjL3Jlc29sdi5jb25mCmZpCgoKbWtkaXIgL2V0Yy9zc2gvYXV0aF9wcmluY2lwYWxzIC9yb290Ly5zc2gKcHJpbnRmICJzbmFwcCAgQUxMPShBTEwpIE5PUEFTU1dEOkFMTCIgPiAvZXRjL3N1ZG9lcnMuZC9zbmFwcApwcmludGYgJ3Jvb3QnID4gL2V0Yy9zc2gvYXV0aF9wcmluY2lwYWxzL3Jvb3QKcHJpbnRmICdyb290LHNuYXBwJyA+IC9ldGMvc3NoL2F1dGhfcHJpbmNpcGFscy9zbmFwcAp1c2VybW9kIC1zIC9iaW4vYmFzaCAkVVNFUk5BTUUKc3lzdGVtY3RsIHJlc3RhcnQgc3NoZAoKCmhvc3RuYW1lY3RsIHNldC1ob3N0bmFtZSAkVk1OQU1FCmV4cG9ydCBWTVNOQU1FPSR7Vk1OQU1FJSUuKn0Kc2VkICAtaSAnLzEyNy4wLjEuMS9kJyAvZXRjL2hvc3RzCnNlZCAtaWUgIi8xMjcuMC4wLjEgbG9jYWxob3N0L2EgMTI3LjAuMS4xICRWTU5BTUUgJFZNU05BTUUiIC9ldGMvaG9zdHMKCmNhdCA+IC9ldGMvcHJvZmlsZS5kL3NuYXBwX2NtZC5zaCA8PCBFT0YKIyEvYmluL3NoCmlmIFsgIlxgaWQgLXVcYCIgLWVxIDAgXTsgdGhlbgogICAgICAgIGV4cG9ydCBQUk9NUFRfQ09NTUFORD0nZXhwb3J0IFBTMT0iW1x1QFxIIFxXXSMgIicKICAgIGVsc2UKICAgICAgICBleHBvcnQgUFJPTVBUX0NPTU1BTkQ9J2V4cG9ydCBQUzE9IltcdUBcSCBcV10kICInCiAgICBmaQpFT0YKY2htb2QgK3ggL2V0Yy9wcm9maWxlLmQvc25hcHBfY21kLnNo
+base_code64
 ```
 
 **memory** The amount of RAM required for the virtual machine, specified in gigabytes.
@@ -717,8 +717,8 @@ additional_disk = {
 
 ```hcl
 networks = [
-  { network = "Afra-10G", ip = "" },
-  { network = "Afra-DB", ip = "" }
+  { network = "ecs-10G", ip = "" },
+  { network = "ecs-DB", ip = "" }
 ]
 
 ```
@@ -727,7 +727,7 @@ networks = [
 
 ```hcl
 networks = [
-  { network = "Afra-10G", ip = "172.20.2.203" }
+  { network = "ecs-10G", ip = "172.40.2.203" }
 ]
 ```  
 
