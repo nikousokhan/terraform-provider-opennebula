@@ -6,8 +6,3 @@ terraform {
     }
   }
 }
-
-provider "opennebula" {
-  endpoint = "https://example.com:2633/RPC2"
-}
-

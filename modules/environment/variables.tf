@@ -5,11 +5,6 @@ variable "groups" {
   }))
 }
 
-variable "group_ids" {
-  description = "Mapping of group names to their IDs"
-  type        = map(string)
-}
-
 variable "users" {
   type = list(object({
     name          = string
@@ -20,12 +15,13 @@ variable "users" {
 
 variable "acls" {
   description = "List of ACLs to create"
-  type = map(object({
+  type = list(object({
     user     = string
     resource = string
     rights   = string
   }))
 }
+
 
 variable "networks" {
   description = "List of virtual networks to create"
@@ -37,7 +33,7 @@ variable "networks" {
     network_mask    = string
     network_address = string
     mtu             = optional(string)
-    ar              = list(object({
+    ar = list(object({
       ar_type = string
       size    = number
       ip4     = string
@@ -56,17 +52,17 @@ variable "images" {
     path         = string
     dev_prefix   = string
     driver       = string
-    group        = string 
+    group        = string
   }))
-}  
+}
 
 variable "hosts" {
   description = "List of hosts to create"
   type = map(object({
-    cluster_id   = string
-    labels       = string
-    cpu          = number
-    memory       = number    
+    cluster_id = string
+    labels     = string
+    cpu        = number
+    memory     = number
   }))
 }
 
@@ -76,48 +72,54 @@ variable "templates" {
     image_id           = string
     network_ids        = list(string)
     sched_requirements = string
-    start_script       = string 
+    start_script       = string
   }))
 }
 
 variable "vms" {
   description = "List of VMs to create"
   type = map(object({
-    template         = string
-    cpu              = number
-    vcpu             = number
-    memory           = number
-    disk_size        = number
-    additional_disk  = optional(object({
-      size     = number  
-      target   = string
-      type     = string
-      format   = string
-    }), null)    
-    group            = string
-    permissions      = number
-    networks         = list(object({
+    template  = string
+    cpu       = number
+    vcpu      = number
+    memory    = number
+    disk_size = number
+    additional_disk = optional(object({
+      size   = number
+      target = string
+      type   = string
+      format = string
+    }), null)
+    group       = string
+    permissions = number
+    networks = list(object({
       network = string
       ip      = optional(string)
     }))
-    sched_requirements = string 
+    sched_requirements = string
     labels             = string
     tags               = optional(map(string))
   }))
-validation {
-  condition = alltrue([
-    for vm_key, vm in var.vms : alltrue([
-      for nic in vm.networks : (
-        nic.ip == "" ? true : (
-          can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}$", nic.ip)) &&
-          alltrue([
-            for part in split(".", nic.ip) :
-            can(tonumber(part)) && tonumber(part) >= 0 && tonumber(part) <= 255
-          ])
+  validation {
+    condition = alltrue([
+      for vm_key, vm in var.vms : alltrue([
+        for nic in vm.networks : (
+          nic.ip == "" ? true : (
+            can(regex("^([0-9]{1,3}\\.){3}[0-9]{1,3}$", nic.ip)) &&
+            alltrue([
+              for part in split(".", nic.ip) :
+              can(tonumber(part)) && tonumber(part) >= 0 && tonumber(part) <= 255
+            ])
+          )
         )
-      )
+      ])
     ])
-  ])
-  error_message = "One or more IP addresses in 'vms' are invalid. Use empty string or a valid IPv4 address (0.0.0.0 to 255.255.255.255)."
+    error_message = "One or more IP addresses in 'vms' are invalid. Use empty string or a valid IPv4 address (0.0.0.0 to 255.255.255.255)."
+  }
 }
+
+variable "default_group" {
+  description = "Default OpenNebula group name for shared resources"
+  type        = string
 }
+
